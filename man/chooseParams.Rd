@@ -52,7 +52,8 @@ width <- 20; height <- 15; p <- 300
 d <- 20; k <- 3; q <- 6; r <- 3
 datlist <- gendata_spacoap(width=width, height=height, p=p, d=d, k=k, q=q, rank0=r)
 set.seed(1)
-para_vec <- chooseParams(X_count=datlist$X, Adj_sp=datlist$Adj_sp, H= datlist$H, Z = datlist$Z, r_max=6)
+para_vec <- chooseParams(X_count=datlist$X, Adj_sp=datlist$Adj_sp,
+ H= datlist$H, Z = datlist$Z, r_max=6)
 print(para_vec)
 }
 \references{

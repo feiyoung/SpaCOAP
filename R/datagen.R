@@ -6,10 +6,11 @@
 #' @param height a postive integer, specify the height of the spatial grid. 
 #' @param p a postive integer, specify the dimension of count variables.
 #' @param d a postive integer,  specify the dimension of covariate matrix with low-rank regression coefficient matrix.
-#' @param r a postive integer,  specify the dimension of  covariate matrix as control variables.
+#' @param k a postive integer,  specify the dimension of  covariate matrix as control variables.
 #' @param q a postive integer,  specify the number of factors.
 #' @param rank0 a postive integer, specify the rank of the coefficient matrix.
 #' @param eta0 a real between 0 and 1, specify the spatial autocorrelation parameter.
+#' @param bandwidth a real positive value, specify the bandwidth in calculating the weighted adjacency matrix.
 #' @param rho a numeric vector with length 2 and positive elements, specify the signal strength of loading matrix and regression coefficient, respectively. 
 #' @param sigma2_eps a positive real, the variance of overdispersion error.
 #' @param seed.beta a postive integer, the random seed for reproducibility of data generation process by fixing the regression coefficient matrix beta.
@@ -37,6 +38,8 @@
 #' @importFrom  stats cov lm residuals rnorm rpois
 #' @importFrom  LaplacesDemon rmatrixnorm 
 #' @importFrom  Rcpp evalCpp
+#' @importFrom  methods as
+#' @importFrom  Matrix rowSums
 #' @examples
 #' width <- 20; height <- 15; p <- 100
 #' d <- 20; k <- 3; q <- 6; r <- 3
@@ -46,8 +49,8 @@
 gendata_spacoap <- function (seed = 1, width=20, height=30, p = 500, d=40, k=3, q = 5,
                            rank0=3, eta0 = 0.5, bandwidth = 1,
                            rho = c(10, 1), sigma2_eps=1, seed.beta=1){
-  require(MASS)
-  library(LaplacesDemon)
+  # require(MASS)
+  # library(LaplacesDemon)
   if(rank0<1) stop("gendata_simu1: rank0 must be greater than 0!")
   if(sigma2_eps<=0) stop("gendata_simu1: sigma2_eps must be a postive real!")
   cor.mat<-function (p, rho, type = "toeplitz") {
@@ -77,8 +80,8 @@ gendata_spacoap <- function (seed = 1, width=20, height=30, p = 500, d=40, k=3, 
     return(y)
   }
   normalizeMatrix <- function(adj, alpha0){
-    require(Matrix)
-    s <- Matrix::colSums(adj)
+    # require(Matrix)
+    s <- Matrix::rowSums(adj)
     n <- nrow(adj)
     adj_norm <- adj
     for(i in 1:n){
@@ -101,7 +104,7 @@ gendata_spacoap <- function (seed = 1, width=20, height=30, p = 500, d=40, k=3, 
   B = matrix(rnorm(p*q), p, q)
   qrB <- qr(B)
   B0 <- qr.Q(qrB) %*% diag(sqrt(seq(q, 1, by=-1))) *fac_B
-  B0 <- B0 %*% GFM:::Diag(sign(B0[1,]))
+  B0 <- B0 %*% Diag(sign(B0[1,]))
   
   set.seed(seed)
   if(k<2) stop("k must be greater than 1!")

@@ -31,19 +31,21 @@ gendata_spacoap(
 
 \item{d}{a postive integer,  specify the dimension of covariate matrix with low-rank regression coefficient matrix.}
 
+\item{k}{a postive integer,  specify the dimension of  covariate matrix as control variables.}
+
 \item{q}{a postive integer,  specify the number of factors.}
 
 \item{rank0}{a postive integer, specify the rank of the coefficient matrix.}
 
 \item{eta0}{a real between 0 and 1, specify the spatial autocorrelation parameter.}
 
+\item{bandwidth}{a real positive value, specify the bandwidth in calculating the weighted adjacency matrix.}
+
 \item{rho}{a numeric vector with length 2 and positive elements, specify the signal strength of loading matrix and regression coefficient, respectively.}
 
 \item{sigma2_eps}{a positive real, the variance of overdispersion error.}
 
 \item{seed.beta}{a postive integer, the random seed for reproducibility of data generation process by fixing the regression coefficient matrix beta.}
-
-\item{r}{a postive integer,  specify the dimension of  covariate matrix as control variables.}
 }
 \value{
 return a list including the following components:

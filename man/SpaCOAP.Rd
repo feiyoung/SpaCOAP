@@ -72,7 +72,8 @@ None
 width <- 20; height <- 15; p <- 100
 d <- 20; k <- 3; q <- 6; r <- 3
 datlist <- gendata_spacoap(width=width, height=height, p=p, d=20, k=k, q=q, rank0=r)
-fitlist <- SpaCOAP(X_count=datlist$X, Adj_sp = datlist$Adj_sp, H= datlist$H, Z = datlist$Z, q=6, rank_use=3)
+fitlist <- SpaCOAP(X_count=datlist$X, Adj_sp = datlist$Adj_sp, 
+H= datlist$H, Z = datlist$Z, q=6, rank_use=3)
 str(fitlist)
 }
 \references{

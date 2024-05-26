@@ -47,14 +47,17 @@
 #' @export
 #' @useDynLib SpaCOAP, .registration = TRUE
 #' @importFrom  irlba irlba
+#' @importFrom stats coef resid
 #' @importFrom  Rcpp evalCpp
+#' @importFrom  Matrix rowSums
 #'
 #'
 #' @examples
 #' width <- 20; height <- 15; p <- 100
 #' d <- 20; k <- 3; q <- 6; r <- 3
 #' datlist <- gendata_spacoap(width=width, height=height, p=p, d=20, k=k, q=q, rank0=r)
-#' fitlist <- SpaCOAP(X_count=datlist$X, Adj_sp = datlist$Adj_sp, H= datlist$H, Z = datlist$Z, q=6, rank_use=3)
+#' fitlist <- SpaCOAP(X_count=datlist$X, Adj_sp = datlist$Adj_sp, 
+#' H= datlist$H, Z = datlist$Z, q=6, rank_use=3)
 #' str(fitlist)
 
 SpaCOAP <- function(X_count, Adj_sp, H, Z=matrix(1, nrow(X_count),1),offset=rep(0, nrow(X_count)), rank_use=5,
@@ -75,7 +78,7 @@ SpaCOAP <- function(X_count, Adj_sp, H, Z=matrix(1, nrow(X_count),1),offset=rep(
     return(y)
   }
   scaleMatrix_byrow <- function(adj){
-    require(Matrix)
+    #require(Matrix)
     s <- Matrix::rowSums(adj)+1e-8
     n <- length(s)
     adj_norm <- adj / matrix(s, nrow=n, ncol=n, byrow = FALSE)
@@ -87,7 +90,7 @@ SpaCOAP <- function(X_count, Adj_sp, H, Z=matrix(1, nrow(X_count),1),offset=rep(
     return(adj_norm)
   }
   get_initials <- function(X, q){
-    require(irlba)
+    # require(irlba)
     n <- nrow(X); p <- ncol(X)
     mu <- colMeans(X)
     X <- X - matrix(mu, nrow=n, ncol=p, byrow=TRUE)
@@ -164,7 +167,8 @@ SpaCOAP <- function(X_count, Adj_sp, H, Z=matrix(1, nrow(X_count),1),offset=rep(
 #' d <- 20; k <- 3; q <- 6; r <- 3
 #' datlist <- gendata_spacoap(width=width, height=height, p=p, d=d, k=k, q=q, rank0=r)
 #' set.seed(1)
-#' para_vec <- chooseParams(X_count=datlist$X, Adj_sp=datlist$Adj_sp, H= datlist$H, Z = datlist$Z, r_max=6)
+#' para_vec <- chooseParams(X_count=datlist$X, Adj_sp=datlist$Adj_sp,
+#'  H= datlist$H, Z = datlist$Z, r_max=6)
 #' print(para_vec)
 
 
