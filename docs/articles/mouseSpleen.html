@@ -85,7 +85,7 @@
       <h1 data-toc-skip>SpaCOAP: mouse spleen dataset</h1>
                         <h4 data-toc-skip class="author">Wei Liu</h4>
             
-            <h4 data-toc-skip class="date">2024-05-25</h4>
+            <h4 data-toc-skip class="date">2024-05-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/feiyoung/SpaCOAP/blob/HEAD/vignettes/mouseSpleen.Rmd" class="external-link"><code>vignettes/mouseSpleen.Rmd</code></a></small>
       <div class="hidden name"><code>mouseSpleen.Rmd</code></div>
@@ -95,15 +95,15 @@
     
     
 <p>This vignette introduces the SpaCOAP workflow for the analysis of spatial multi-omics dataset.</p>
-<p>We demonstrate the use of SpaCOAP to one mouse spleen data collected from the SPOTS platform that are <a href="https://github.com/feiyoung/SpaCOAP/tree/main/vignettes_data" class="external-link">here</a>, which can be downloaded to the current working path by the following command:</p>
+<p>We demonstrate the use of SpaCOAP to one mouse spleen data collected from the SPOTS platform that are <a href="https://github.com/feiyoung/SpaCOAP/raw/master/vignettes_data/" class="external-link">here</a>, which can be downloaded to the current working path by the following command:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">url1</span> <span class="op">&lt;-</span> <span class="st">"https://github.com/feiyoung/ProFAST/SpaCOAP/main/vignettes_data/"</span>
+<code class="sourceCode R"><span class="va">url1</span> <span class="op">&lt;-</span> <span class="st">"https://github.com/feiyoung/SpaCOAP/raw/master/vignettes_data/"</span>
 <span class="va">rna_object</span> <span class="op">&lt;-</span> <span class="st">"seu_rna_over_Spleen.RDS?raw=true"</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">url1</span>, <span class="va">rna_object</span><span class="op">)</span>,<span class="st">"seu_rna_over_Spleen.RDS"</span>,mode<span class="op">=</span><span class="st">'wb'</span><span class="op">)</span>
 <span class="va">protein_object</span> <span class="op">&lt;-</span> <span class="st">"seu_adt_over_Spleen.RDS?raw=true"</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">url1</span>,<span class="va">protein_object</span><span class="op">)</span>, <span class="st">'seu_adt_over_Spleen.RDS'</span>, mode<span class="op">=</span><span class="st">'wb'</span><span class="op">)</span>
 <span class="co">## download  annotation</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">url1</span>, <span class="st">"cell_clusters_anno.rds?raw=true"</span><span class="op">)</span>, <span class="st">"cell_clusters_anno.rds"</span>, <span class="st">"wb"</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">url1</span>, <span class="st">"cell_clusters_anno.rds?raw=true"</span><span class="op">)</span>, <span class="st">"cell_clusters_anno.rds"</span>, mode<span class="op">=</span><span class="st">"wb"</span><span class="op">)</span></code></pre></div>
 <div class="section level3">
 <h3 id="data-preparation">Data preparation<a class="anchor" aria-label="anchor" href="#data-preparation"></a>
 </h3>
@@ -133,7 +133,7 @@
   <span class="op">}</span>
   <span class="va">radius.lower</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">dis</span><span class="op">[</span><span class="va">dis</span><span class="op">&gt;</span><span class="fl">0</span><span class="op">]</span><span class="op">)</span>
   <span class="va">Adj_sp</span> <span class="op">&lt;-</span> <span class="fu">DR.SC</span><span class="fu">:::</span><span class="fu"><a href="https://rdrr.io/pkg/DR.SC/man/getneighborhood_fast.html" class="external-link">getneighborhood_fast</a></span><span class="op">(</span><span class="va">pos</span>, radius<span class="op">=</span><span class="va">radius.upper</span><span class="op">)</span>
-  <span class="va">Med</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rrpack/man/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu">Matrix</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">Adj_sp</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="st">'Median'</span><span class="op">]</span>
+  <span class="va">Med</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu">Matrix</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">Adj_sp</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="st">'Median'</span><span class="op">]</span>
   <span class="kw">if</span><span class="op">(</span><span class="va">Med</span> <span class="op">&lt;</span> <span class="va">lower.med</span><span class="op">)</span> <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"The radius.upper is too smaller that cannot find median neighbors greater than 4."</span><span class="op">)</span>
   <span class="va">start.radius</span> <span class="op">&lt;-</span> <span class="fl">1</span>
   <span class="va">Med</span> <span class="op">&lt;-</span> <span class="fl">0</span>
@@ -143,7 +143,7 @@
   <span class="kw">while</span><span class="op">(</span><span class="op">!</span><span class="op">(</span><span class="va">Med</span> <span class="op">&gt;=</span> <span class="va">lower.med</span> <span class="op">&amp;&amp;</span> <span class="va">Med</span> <span class="op">&lt;=</span><span class="va">upper.med</span><span class="op">)</span><span class="op">)</span><span class="op">{</span> <span class="co"># ensure that each spot has about 4~6 neighborhoods in median.</span>
     
     <span class="va">Adj_sp</span> <span class="op">&lt;-</span> <span class="fu">DR.SC</span><span class="fu">:::</span><span class="fu"><a href="https://rdrr.io/pkg/DR.SC/man/getneighborhood_fast.html" class="external-link">getneighborhood_fast</a></span><span class="op">(</span><span class="va">pos</span>, radius<span class="op">=</span><span class="va">start.radius</span><span class="op">)</span>
-    <span class="va">Med</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rrpack/man/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu">Matrix</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">Adj_sp</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="st">'Median'</span><span class="op">]</span>
+    <span class="va">Med</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu">Matrix</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">Adj_sp</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="st">'Median'</span><span class="op">]</span>
     <span class="kw">if</span><span class="op">(</span><span class="va">Med</span> <span class="op">&lt;</span> <span class="va">lower.med</span><span class="op">)</span><span class="op">{</span>
       <span class="va">radius.lower</span> <span class="op">&lt;-</span> <span class="va">start.radius</span>
       <span class="va">start.radius</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">radius.lower</span> <span class="op">+</span> <span class="va">radius.upper</span><span class="op">)</span><span class="op">/</span><span class="fl">2</span>
@@ -195,7 +195,7 @@
 <span class="op">}</span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="view-the-dlpfc-data">View the DLPFC data<a class="anchor" aria-label="anchor" href="#view-the-dlpfc-data"></a>
+<h2 id="view-the-dlpfc-data">Obtain data matrices and tunning parameters<a class="anchor" aria-label="anchor" href="#view-the-dlpfc-data"></a>
 </h2>
 <p>Wrap the data matrix from the SeuratObject, including the RNA expression count matrix <code>X_count</code>, covraite matrix <code>H</code> associated with protein markters, control variables (here only an intercept term) <code>Z</code>, and spatial coordinate matrix <code>pos</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">

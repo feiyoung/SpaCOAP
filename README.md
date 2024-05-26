@@ -1,7 +1,7 @@
 # SpaCOAP
 High-Dimensional Spatial Covariate-Augmented Overdispersed Poisson Factor Model
 
-=========================================================================
+================================================================
 <!-- badges: start -->
 
 [![](https://www.r-pkg.org/badges/version-ago/SpaCOAP)](https://cran.r-project.org/package=SpaCOAP)
@@ -10,8 +10,8 @@ High-Dimensional Spatial Covariate-Augmented Overdispersed Poisson Factor Model
 <!-- badges: end -->
 
 
-We introduces an efficient latent representation learning approach tailored specifically for high-dimensional, large-scale spatial count data, incorporating additional covariates for enhanced performance.
- To model correlations among variables measured at a shared spatial location, we introduce a covariate-augmented overdispersed Poisson factor model. We distinguish between high-dimensional covariates sharing similar attributes and those serving as control variables to enrich the representation learning process. To capture the spatial dependency of each variable across different locations, we apply a conditional autoregressive model to the latent factors. Furthermore, we propose a variational expectation-maximization algorithm to estimate the model parameters and latent factors, imposing a low-rank constraint on the high-dimensional regression coefficient matrix.
+We introduce an efficient latent representation learning approach tailored specifically for high-dimensional, large-scale spatial count data, incorporating additional covariates for enhanced performance.
+ To model correlations among variables measured at a shared spatial location, we utilize a covariate-augmented overdispersed Poisson factor model. We distinguish between high-dimensional covariates sharing similar attributes and those serving as control variables to enrich the representation learning process. To capture the spatial dependency of each variable across different locations, we apply a conditional autoregressive model to the latent factors. Furthermore, we propose a variational expectation-maximization algorithm to estimate the model parameters and latent factors, imposing a low-rank constraint on the high-dimensional regression coefficient matrix.
 
 
 
@@ -38,7 +38,7 @@ For usage examples and guided walkthroughs, check the `vignettes` directory of t
 
 * [Simulated data](https://feiyoung.github.io/SpaCOAP/articles/simu.html)
 
-* [Real data](https://feiyoung.github.io/SpaCOAP/articles/simu.html)
+* [Real data](https://feiyoung.github.io/SpaCOAP/articles/mouseSpleen.html)
 
 ## Simulated codes
 For the codes in simulation study, check the `simu_code` directory of the repo.

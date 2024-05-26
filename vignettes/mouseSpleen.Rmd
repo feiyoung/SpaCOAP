@@ -18,32 +18,32 @@ knitr::opts_chunk$set(
 This vignette introduces the SpaCOAP workflow for the analysis of  spatial multi-omics dataset.
 
 
-We demonstrate the use of SpaCOAP to one mouse spleen data collected from the SPOTS platform that are [here](https://github.com/feiyoung/SpaCOAP/tree/main/vignettes_data), which can be downloaded to the current working path by the following command:
+We demonstrate the use of SpaCOAP to one mouse spleen data collected from the SPOTS platform that are [here](https://github.com/feiyoung/SpaCOAP/raw/master/vignettes_data/), which can be downloaded to the current working path by the following command:
 ```{r eval=FALSE}
-url1 <- "https://github.com/feiyoung/SpaCOAP/main/vignettes_data/"
+url1 <- "https://github.com/feiyoung/SpaCOAP/raw/master/vignettes_data/"
 rna_object <- "seu_rna_over_Spleen.RDS?raw=true"
 download.file(paste0(url1, rna_object),"seu_rna_over_Spleen.RDS",mode='wb')
 protein_object <- "seu_adt_over_Spleen.RDS?raw=true"
 download.file(paste0(url1,protein_object), 'seu_adt_over_Spleen.RDS', mode='wb')
 ## download  annotation
-download.file(paste0(url1, "cell_clusters_anno.rds?raw=true"), "cell_clusters_anno.rds", "wb")
+download.file(paste0(url1, "cell_clusters_anno.rds?raw=true"), "cell_clusters_anno.rds", mode="wb")
 ```
 
 ### Data preparation
 Then we load the data to R.
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 seu_rna_over <- readRDS("./seu_rna_over_Spleen.RDS")
 seu_adt_over <- readRDS("./seu_adt_over_Spleen.RDS")
 load("./cell_clusters_anno.rds")
 ```
 
 The package can be loaded with the command:
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 library(SpaCOAP) #
 ```
 
 Define some functions for use.
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 searchRadius <- function(pos, lower.med=8, upper.med=10, radius.upper= NULL){
   if (!inherits(pos, "matrix"))
     stop("method is only for  matrix object!")
@@ -121,9 +121,9 @@ kappa_fun <- function(y1, y2){
 }
 ```
 
-## View the DLPFC data
+## Obtain data matrices and tunning parameters
 Wrap the data matrix from the SeuratObject, including the RNA expression count matrix `X_count`, covraite matrix `H` associated with protein markters, control variables (here only an intercept term) `Z`,  and spatial coordinate  matrix `pos`.
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 
 X_count <- Matrix::t(seu_rna_over[["RNA"]][seu_rna_over[['RNA']]@var.features,])
 X_count <-  as.matrix(X_count)
@@ -143,7 +143,7 @@ Adj_sp <-  SpaCOAP:::getneighbor_weightmat(pos, radius = radius_use, width=media
 ### Determine the structure dimension
 
 Next, we select the number of factors and the rank of regreesion coefficient matrix using the proposed criterion.
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 q_max <- 20
 d <- ncol(H)
 rank_max <- d
@@ -155,7 +155,7 @@ time_spacoap_max <- toc[3] - tic[3]
 ```
 
 We apply the criterion, taking into account that the real data does not necessarily originate from our model. Therefore, we opt for a conservative approach that retains more information.
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 threshold=c(1e-15, 1e-20)
 thre1 <- threshold[1]
 beta_svalues <- svd(reslist_max$bbeta)$d
@@ -176,7 +176,7 @@ hq <- 5
 
 ### Fitting SpaCOAP
 First, we run the proposed SpaCOAP method.
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 hr <- 9;hq <- 5
 featureList <- list()
 tic <- proc.time()
@@ -199,7 +199,7 @@ featureList[['SpaCOAP']] <- cbind(H_spacoap, reslist$F)
 ### Compare SpaCOAP and other methods
 
 First, we run COAP and calculate the MacFadden's R-square.
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 ##COAP
 library(COAP)
 tic <- proc.time()
@@ -207,7 +207,6 @@ res_coap <- RR_COAP(X_count, Z = cbind(Z, H), rank_use= 2+hr, q=hq,
                     epsELBO = 1e-7, maxIter = 30)
 toc <- proc.time()
 time_coap <- toc[3] - tic[3]
-save(res_coap, time_coap, file='reslist_time_coap.rds')
 svd_x <- svd(res_coap$bbeta[,-c(1)], nu = hr, nv=hr)
 H_coap <- H %*% svd_x$v
 (R2_coap <- ProFAST::get_r2_mcfadden(embeds= cbind(res_coap$H, H_coap), y=as.factor(cell_clusters)))
@@ -215,7 +214,7 @@ featureList[['COAP']] <- cbind(res_coap$H, H_coap)
 ```
 
 Second, we run MRRR and calculate the MacFadden's R-square.
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 ## MRRR
 mrrr_run <- function(Y, X, rank0, q=NULL, family=list(poisson()),
                      familygroup=rep(1,ncol(Y)), epsilon = 1e-4, sv.tol = 1e-2,
@@ -266,7 +265,7 @@ featureList[['MRRR']] <- cbind(H_mrrr, F_mrrr)
 ```
 
 Finally, we execute FAST and compute the MacFadden's R-squared. It is worth noting that  we refrain from comparing with PLNPCA in this demo due to its time-consuming nature.
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 fast_run <- function(X_count, Adj_sp, q, verbose=TRUE, epsELBO=1e-8){
   require(ProFAST)
 
@@ -288,7 +287,7 @@ featureList[['FAST']] <- res_fast$hV
 ### Summarize the metrics
 We evaluate the correlation between the low-dimensional representations learned by SpaCOAP and other methods with the annotated cell clusters using two metrics. The first metric is the adjusted MacFadden's  $\mathrm{R}^2$,  referred to as $\mathrm{MacR}^2$. This measure quantifies the amount of biological information captured by the representations, where a higher value signifies superior performance in representation learning.
 
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 R2List <- list()
 cell_label <- cell_clusters
 for(im in 1: length(featureList)){
@@ -297,7 +296,7 @@ for(im in 1: length(featureList)){
 }
 names(R2List) <- names(featureList)
 ```
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 R2Vec <- unlist(R2List)
 names(R2Vec) <- names(R2List)
 barplot(R2Vec, ylim=c(0, 0.8))
@@ -305,7 +304,7 @@ barplot(R2Vec, ylim=c(0, 0.8))
 
 Finally, we employ a classification model trained through randomForest, leveraging the cell clusters and the learned low-dimensional representations by SpaCOAP and other methods. We then compare the prediction performance of this model. To achieve this, we randomly divide the samples into training and testing data with a ratio of  $7:3$. We evaluate the model's performance using prediction accuracy (ACC) and Cohen's Kappa on the testing data. In contrast of ACC, Kappa offers a more robust measure of accuracy, as it takes into account the possibility that the agreement occurs by chance. We repeat this division process ten times to ensure the reliability of our findings.
 
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 N <- 10
 n <- length(cell_label)
 methodNames <- c("SpaCOAP", "COAP",  "MRRR", "FAST")
