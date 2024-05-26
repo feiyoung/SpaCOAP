@@ -1,0 +1,8 @@
+pandoc: 2.7.2
+pkgdown: 2.0.6
+pkgdown_sha: ~
+articles:
+  mouseSpleen: mouseSpleen.html
+  simu: simu.html
+last_built: 2024-05-25T11:11Z
+
