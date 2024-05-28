@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 This vignette introduces the SpaCOAP workflow for the analysis of  spatial multi-omics dataset.
 
 
-We demonstrate the use of SpaCOAP to one mouse spleen data collected from the SPOTS platform that are [here](https://github.com/feiyoung/SpaCOAP/raw/master/vignettes_data/), which can be downloaded to the current working path by the following command:
+We demonstrate the use of SpaCOAP to one mouse spleen data collected from the SPOTS platform that are [here](https://github.com/feiyoung/SpaCOAP/tree/master/vignettes_data), which can be downloaded to the current working path by the following command:
 ```{r eval=FALSE}
 url1 <- "https://github.com/feiyoung/SpaCOAP/raw/master/vignettes_data/"
 rna_object <- "seu_rna_over_Spleen.RDS?raw=true"
